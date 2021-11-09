@@ -1,0 +1,43 @@
+﻿* {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Georgia', serif, sans-serif;
+}
+
+.container {
+  flex: 1;
+  max-width: 1200px;
+}
+
+.table {
+  display: grid;
+  grid-template-columns: 2fr 4fr 2fr 1fr 1fr;
+  grid-auto-rows: auto;
+  column-gap: 0;
+}
+
+.table div {
+  box-shadow: 
+    2px 0 #888, 
+    0 2px #888, 
+    2px 2px #888,
+    2px 0 #888 inset,
+    0 2px #888 inset;
+  border-collapse: collapse;
+  padding: 6px;
+  margin: 0;
+}
+
+.header {
+  font-weight: bold;
+}
