@@ -1,7 +1,9 @@
 let myLibrary = new Library();
 let table = document.querySelector('.table');
+let newBookButton = document.querySelector('#add-book');
 
 addDummyData();
+addPageListeners();
 
 function addDummyData() {
   let dummyBook1 = new Book('978-0141036144', '1984', 'George Orwell', 336, true);
@@ -26,4 +28,8 @@ function addToDisplay(book) {
     }
     table.appendChild(item);
   });
+}
+
+function addPageListeners() {
+  console.log(newBookButton);
 }
