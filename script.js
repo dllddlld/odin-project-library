@@ -43,6 +43,14 @@ function togglePopup() {
     });
   } else {
     form.reset();
+    let invalidLabels = document.querySelectorAll('.invalid-text');
+    let invalidFields = document.querySelectorAll('.invalid');
+    invalidLabels.forEach(label => {
+      label.classList.remove('invalid-text');
+    });
+    invalidFields.forEach(field => {
+      field.classList.remove('invalid');
+    });
     setTimeout(function() {
       modalPopup.classList.remove('open');
     });
@@ -73,7 +81,7 @@ function submitForm(e) {
     if (field.isMandatory && !inputValue) {
       element.classList.add('invalid');
       labelElement.classList.add('invalid-text');
-      hasMissingMandatoryValues;
+      hasMissingMandatoryValues = true;
       return;
     } else {
       element.classList.remove('invalid');
