@@ -1,21 +1,11 @@
 let myLibrary = new Library();
 let table = document.querySelector('.table');
-let newBookButton = document.querySelector('#add-book');
+let form = document.querySelector('form');
 
-addDummyData();
 addPageListeners();
 
-function addDummyData() {
-  let dummyBook1 = new Book('978-0141036144', '1984', 'George Orwell', 336, true);
-  let dummyBook2 = new Book('978-1599869773', 'The Art of War', 'Sun Tzu', 68, false);
-  dummyBook1.addToLibrary();
-  dummyBook2.addToLibrary();
-  addToDisplay(dummyBook1);
-  addToDisplay(dummyBook2);
-}
-
 function addToDisplay(book) {
-  let keys = ['id', 'title', 'author', 'pageCount', 'read'];
+  let keys = ['title', 'author', 'pageCount', 'read'];
   keys.forEach(key => {
     let item = document.createElement('div');
     if (key === 'read') {
@@ -31,5 +21,79 @@ function addToDisplay(book) {
 }
 
 function addPageListeners() {
-  console.log(newBookButton);
+  let newBookButton = document.querySelector('#add-nb');
+  let submitBookButton = form.querySelector('#nbsubmit');
+  let cancelBookButton = form.querySelector('#nbcancel');
+  newBookButton.addEventListener('click', togglePopup);
+  submitBookButton.addEventListener('click', submitForm);
+  cancelBookButton.addEventListener('click', togglePopup);
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+  })
+}
+
+function togglePopup() {
+  console.log('toggle popup');
+  let modalContainer = document.querySelector('.modal-container');
+  let modalPopup = modalContainer.querySelector('.modal-popup');
+  if (this.id === 'add-nb') {
+    modalContainer.style.display = 'flex';
+    setTimeout(function() {
+      modalPopup.classList.add('open');
+    });
+  } else {
+    form.reset();
+    setTimeout(function() {
+      modalPopup.classList.remove('open');
+    });
+    setTimeout(function() {
+      modalContainer.style.display = 'none';
+    }, 600);
+  }
+}
+
+function submitForm(e) {
+  e.preventDefault();
+  let fields = [
+    addField('nbtitle', 'title', 'value', true),
+    addField('nbauthor', 'author', 'value', true),
+    addField('nbpages', 'pageCount', 'value', true),
+    addField('nbread', 'read', 'checked', false),
+  ];
+  console.log(fields);
+  let bookParams = {};
+  let hasMissingMandatoryValues = false;
+  fields.forEach(field => {
+    let element = document.querySelector('#' + field.id);
+    let labelElement = document.querySelector(`label[for="${field.id}"]`);
+    let inputValue = element[field.valueType];
+    if (field.valueType === 'value') {
+      inputValue = inputValue.trim();
+    }
+    if (field.isMandatory && !inputValue) {
+      element.classList.add('invalid');
+      labelElement.classList.add('invalid-text');
+      hasMissingMandatoryValues;
+      return;
+    } else {
+      element.classList.remove('invalid');
+      labelElement.classList.remove('invalid-text');
+    }
+    bookParams[field.key] = inputValue;
+  });
+  if (hasMissingMandatoryValues) return;
+  console.log(bookParams);
+  let book = new Book(bookParams);
+  book.addToLibrary();
+  addToDisplay(book);
+  togglePopup(this);
+}
+
+function addField(id, key, valueType, isMandatory) {
+  return {
+    id: id,
+    key: key,
+    valueType: valueType,
+    isMandatory: isMandatory
+  };
 }

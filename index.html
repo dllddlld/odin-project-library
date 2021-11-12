@@ -13,10 +13,9 @@
 
 <body>
     <div class="container">
-        <button id="add-book">New Book</button>
+        <button id="add-nb">New Book</button>
         <div class="table-container">
             <div class="table">
-                <div class="header">ISBN-13</div>
                 <div class="header">Title</div>
                 <div class="header">Author</div>
                 <div class="header">Pages</div>
@@ -27,7 +26,7 @@
     <div class="modal-container">
         <div class="modal-popup">
             <h2>Add a New Book</h2>
-            <form>
+            <form action="">
                 <div>
                     <label for="nbtitle">Title:</label><br />
                     <input type="text" id="nbtitle" name="nbtitle"><br />
@@ -37,18 +36,21 @@
                     <input type="text" id="nbauthor" name="nbauthor"><br />
                 </div>
                 <div>
-                    <label for="nbpages" >Page Count:</label><br />
+                    <label for="nbpages">Page Count:</label><br />
                     <input type="number" id="nbpages" name="nbpages" min="1" step="1"><br />
                 </div>
                 <div>
                     <input type="checkbox" id="nbread" name="nbread">
                     <label for="nbread">Have read</label>
                 </div>
-                <input type="submit" value="Submit">
+                <div class="form-buttons">
+                    <button id="nbsubmit">Submit</button>
+                    <button id="nbcancel">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
-    
+
     <script src="library.js"></script>
     <script src="script.js"></script>
 </body>
