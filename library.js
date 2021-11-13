@@ -8,10 +8,12 @@ function Book(params) {
   this.author = params.author;
   this.pageCount = params.pageCount;
   this.read = params.read;
+  this.id = null;
   this.addToLibrary();
 }
 
 Book.prototype.addToLibrary = function() {
-  myLibrary.books.push(this);
   myLibrary.booksAdded++;
+  this.id = myLibrary.booksAdded;
+  myLibrary.books.push(this);
 };

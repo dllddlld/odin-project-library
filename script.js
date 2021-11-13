@@ -36,6 +36,7 @@ function addToDisplay(book) {
       let checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.checked = book[key];
+      checkbox.addEventListener('click', toggleRead);
       item.appendChild(checkbox);
     } else {
       item.textContent = book[key];
@@ -56,18 +57,23 @@ function addRemoveButton() {
 }
 
 function removeBook() {
-  console.log(this);
   let bookId = this.dataset.bookId;
-  console.log(bookId);
   let row = table.querySelectorAll(`div[data-book-id="${bookId}"]`);
-  console.log(row);
   row.forEach(cell => {
     table.removeChild(cell);
   });
 }
 
+function toggleRead() {
+  let bookId = this.parentElement.dataset.bookId;
+  for (let i = 0; i < myLibrary.books.length; i++) {
+    let book = myLibrary.books[i];
+    if (book.id.toString() !== bookId) continue;
+    book.read = this.checked;
+  }
+}
+
 function togglePopup() {
-  console.log('toggle popup');
   let modalContainer = document.querySelector('.modal-container');
   let modalPopup = modalContainer.querySelector('.modal-popup');
   if (this.id === 'add-nb') {
