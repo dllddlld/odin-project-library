@@ -62,6 +62,9 @@ function removeBook() {
   row.forEach(cell => {
     table.removeChild(cell);
   });
+  myLibrary.books = myLibrary.books.filter(book => {
+    return book.id.toString() !== bookId;
+  });
 }
 
 function toggleRead() {
