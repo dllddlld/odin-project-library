@@ -3,6 +3,30 @@ let table = document.querySelector('.table');
 let form = document.querySelector('form');
 
 addPageListeners();
+addSampleBooks();
+
+function addPageListeners() {
+  let newBookButton = document.querySelector('#add-nb');
+  let submitBookButton = form.querySelector('#nbsubmit');
+  let cancelBookButton = form.querySelector('#nbcancel');
+  newBookButton.addEventListener('click', togglePopup);
+  submitBookButton.addEventListener('click', submitForm);
+  cancelBookButton.addEventListener('click', togglePopup);
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+  });
+}
+
+function addSampleBooks() {
+  let samples = [
+    {title: '1984', author: 'George Orwell', pageCount: '300', read: true},
+    {title: 'The Art of War', author: 'Sun Tzu', pageCount: '80', read: false}
+  ];
+  samples.forEach(sample => {
+    let book = new Book(sample);
+    addToDisplay(book);
+  });
+}
 
 function addToDisplay(book) {
   let keys = ['title', 'author', 'pageCount', 'read'];
@@ -16,20 +40,30 @@ function addToDisplay(book) {
     } else {
       item.textContent = book[key];
     }
+    item.dataset.bookId = myLibrary.booksAdded;
     table.appendChild(item);
   });
+  addRemoveButton();
 }
 
-function addPageListeners() {
-  let newBookButton = document.querySelector('#add-nb');
-  let submitBookButton = form.querySelector('#nbsubmit');
-  let cancelBookButton = form.querySelector('#nbcancel');
-  newBookButton.addEventListener('click', togglePopup);
-  submitBookButton.addEventListener('click', submitForm);
-  cancelBookButton.addEventListener('click', togglePopup);
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-  })
+function addRemoveButton() {
+  let removeItem = document.createElement('div');
+  removeItem.classList.add('remove');
+  removeItem.textContent = 'Remove';
+  removeItem.dataset.bookId = myLibrary.booksAdded;
+  removeItem.addEventListener('click', removeBook);
+  table.appendChild(removeItem);
+}
+
+function removeBook() {
+  console.log(this);
+  let bookId = this.dataset.bookId;
+  console.log(bookId);
+  let row = table.querySelectorAll(`div[data-book-id="${bookId}"]`);
+  console.log(row);
+  row.forEach(cell => {
+    table.removeChild(cell);
+  });
 }
 
 function togglePopup() {
@@ -51,7 +85,7 @@ function togglePopup() {
     invalidFields.forEach(field => {
       field.classList.remove('invalid');
     });
-    setTimeout(function() {
+    setTimeout(function() { //transition doesn't work without setTimeout
       modalPopup.classList.remove('open');
     });
     setTimeout(function() {
@@ -68,7 +102,6 @@ function submitForm(e) {
     addField('nbpages', 'pageCount', 'value', true),
     addField('nbread', 'read', 'checked', false),
   ];
-  console.log(fields);
   let bookParams = {};
   let hasMissingMandatoryValues = false;
   fields.forEach(field => {
@@ -90,9 +123,7 @@ function submitForm(e) {
     bookParams[field.key] = inputValue;
   });
   if (hasMissingMandatoryValues) return;
-  console.log(bookParams);
   let book = new Book(bookParams);
-  book.addToLibrary();
   addToDisplay(book);
   togglePopup(this);
 }
