@@ -41,9 +41,11 @@ function addSampleBooks() {
     { title: '1984', author: 'George Orwell', pageCount: '300', read: true },
     { title: 'The Art of War', author: 'Sun Tzu', pageCount: '80', read: false }
   ];
-  samples.forEach(sample => {
-    let book = new Book(myLibrary, sample);
-  });
+  for (let i = 0; i < 20; i++) {
+    samples.forEach(sample => {
+      let book = new Book(myLibrary, sample);
+    });
+  }
   updateLibraryDisplay();
 }
 

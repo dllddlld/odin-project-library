@@ -6,6 +6,7 @@
   --main-accent-color: #704214;
   --secondary-accent-color: #ffd596;
   --invalid-alert-color: #ff0000;
+  --disabled-color: #e5e5e5;
   --main-font: 'Garamond', serif;
 }
 
@@ -25,17 +26,11 @@ body {
   background-color: var(--main-bg-color);
   color: var(--main-font-color);
   font-family: var(--main-font);
-  display: flex;
 }
 
 .container {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px 60px;
-  margin: 0;
-  width: 80%;
 }
 
 button {
@@ -48,8 +43,45 @@ button {
   border-radius: 5px;
 }
 
+.display-as {
+  color: var(--main-font-color);
+  background-color: var(--secondary-accent-color);
+}
+
+.display-as:disabled {
+  background-color: var(--disabled-color);
+  cursor: auto;
+}
+
 button:hover {
   cursor: pointer;
+}
+
+.header-container {
+  position: sticky;
+  top: 0;
+  width: 100%;
+}
+
+header {
+  background-color: white;
+  border-bottom: 1px solid var(--main-accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 10px 20px;
+  width: 100%;
+}
+
+header >* {
+  flex: 1;
+}
+
+.header-options {
+  display: flex;
+  gap: 20px;
+  justify-content: end;
 }
 
 /* --- library table --- */
