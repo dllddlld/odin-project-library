@@ -1,17 +1,26 @@
-let HEADERS = ['Title', 'Author', 'Pages', 'Read', 'Remove'];
 let myLibrary = new Library();
 let form = document.querySelector('form');
+let displayAsTable = document.querySelector('#display-table');
+let displayAsCards = document.querySelector('#display-cards');
 
 initializePage();
 
 function initializePage() {
   let libraryContainer = document.querySelector('.library-container');
   addPageListeners();
-  createTable(libraryContainer);
+  if (myLibrary.displayType === 'table') {
+    createTable(libraryContainer);
+  } else {
+    createCards(libraryContainer);
+  }
   addSampleBooks();
 }
 
 function addPageListeners() {
+  disableSelectedDisplayOption();
+  displayAsTable.addEventListener('click', toggleDisplayType);
+  displayAsCards.addEventListener('click', toggleDisplayType);
+
   let newBookButton = document.querySelector('#add-nb');
   let submitBookButton = form.querySelector('#nbsubmit');
   let cancelBookButton = form.querySelector('#nbcancel');
@@ -23,10 +32,56 @@ function addPageListeners() {
   });
 }
 
+function toggleDisplayType() {
+  if (this.id === 'display-table') {
+    myLibrary.displayType = 'table';
+  } else {
+    myLibrary.displayType = 'cards';
+  }
+
+  disableSelectedDisplayOption();
+  updateLibraryDisplay();
+}
+
+function disableSelectedDisplayOption() {
+  displayAsTable.disabled = myLibrary.displayType === 'table';
+  displayAsCards.disabled = myLibrary.displayType === 'cards';
+}
+
+function addSampleBooks() {
+  let samples = [
+    { title: '1984', author: 'George Orwell', pageCount: '336', read: true },
+    { title: 'The Art of War', author: 'Sun Tzu', pageCount: '112', read: false },
+    { title: '101 Essays That Will Change The Way You Think', author: 'Brianna Wiest', pageCount: '448', read: false },
+    { title: 'Atomic Habits', author: 'James Clear', pageCount: '320', read: false },
+    { title: 'Bad Blood', author: 'John Carreyrou', pageCount: '320', read: true },
+  ];
+  samples.forEach(sample => {
+    let book = new Book(myLibrary, sample);
+  });
+  updateLibraryDisplay();
+}
+
+function updateLibraryDisplay() {
+  let libraryContainer = document.querySelector('.library-container');
+  if (libraryContainer.childElementCount > 0) {
+    libraryContainer.firstElementChild.remove();
+  }
+  let libraryContent;
+  if (myLibrary.displayType === 'table') {
+    libraryContent = createTable(libraryContainer);
+    addTableContent(libraryContent);
+  } else {
+    libraryContent = createCards(libraryContainer);
+    addCardsContent(libraryContent);
+  }
+}
+
 function createTable(libraryContainer) {
+  let tableHeaders = ['Title', 'Author', 'Pages', 'Read', 'Remove'];
   let table = document.createElement('div');
   table.classList.add('table');
-  HEADERS.forEach(header => {
+  tableHeaders.forEach(header => {
     let headerItem = document.createElement('div');
     headerItem.classList.add('header');
     headerItem.textContent = header;
@@ -36,60 +91,92 @@ function createTable(libraryContainer) {
   return table;
 }
 
-function addSampleBooks() {
-  let samples = [
-    { title: '1984', author: 'George Orwell', pageCount: '300', read: true },
-    { title: 'The Art of War', author: 'Sun Tzu', pageCount: '80', read: false }
-  ];
-  for (let i = 0; i < 20; i++) {
-    samples.forEach(sample => {
-      let book = new Book(myLibrary, sample);
-    });
-  }
-  updateLibraryDisplay();
-}
-
-function updateLibraryDisplay() {
-  let libraryContainer = document.querySelector('.library-container');
-  libraryContainer.firstElementChild.remove();
-  let libraryContent = createTable(libraryContainer);
+function addTableContent(libraryContent) {
   myLibrary.books.forEach(book => {
     let keys = ['title', 'author', 'pageCount', 'read'];
     keys.forEach(key => {
       let item = document.createElement('div');
       if (key === 'read') {
-        let checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.checked = book[key];
-        checkbox.addEventListener('click', toggleRead);
-        item.appendChild(checkbox);
+        let readCheckbox = createReadCheckbox(book, key);
+        item.appendChild(readCheckbox);
       } else {
         item.textContent = book[key];
       }
       item.dataset.bookId = myLibrary.books.indexOf(book);
       libraryContent.appendChild(item);
     });
-    addRemoveButton(libraryContent, book);
+    let removeItem = createRemoveButton(book);
+    libraryContent.appendChild(removeItem);
   });
 }
 
-function addRemoveButton(libraryContent, book) {
+function createCards(libraryContainer) {
+  let cards = document.createElement('div');
+  cards.classList.add('cards');
+  libraryContainer.appendChild(cards);
+  return cards;
+}
+
+function addCardsContent(libraryContent) {
+  myLibrary.books.forEach(book => {
+    let card = document.createElement('div');
+    card.classList.add('card');
+    let rowObjects = [
+      addElementObject('Title', null),
+      addElementObject(null, 'title'),
+      addElementObject('Author', null),
+      addElementObject(null, 'author'),
+      addElementObject('Pages', null),
+      addElementObject(null, 'pageCount'),
+      addElementObject('Read', null),
+      addElementObject(null, 'read'),
+      addElementObject('Remove', null)
+    ];
+    rowObjects.forEach(rowObject => {
+      let item = document.createElement('div');
+      if (rowObject.text) {
+        item.classList.add('header');
+        item.textContent = rowObject.text;
+      } else {
+        if (rowObject.key === 'read') {
+          let readCheckbox = createReadCheckbox(book, rowObject.key);
+          item.appendChild(readCheckbox);
+        } else {
+          item.textContent = book[rowObject.key];
+        }
+      }
+      card.appendChild(item);
+    });
+    let removeItem = createRemoveButton(book);
+    card.appendChild(removeItem);
+    card.dataset.bookId = myLibrary.books.indexOf(book);
+    libraryContent.appendChild(card);
+  });
+}
+
+function createReadCheckbox(book, key) {
+  let checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = book[key];
+  checkbox.addEventListener('click', toggleRead);
+  return checkbox;
+}
+
+function createRemoveButton(book) {
   let removeItem = document.createElement('div');
   removeItem.classList.add('remove');
-  removeItem.textContent = 'Remove';
+  let removeIcon = document.createElement('img');
+  removeIcon.src = 'img/trashcan.svg';
+  removeIcon.style.width = '18px';
+  removeIcon.style.height = 'auto';
+  removeItem.appendChild(removeIcon);
   removeItem.dataset.bookId = myLibrary.books.indexOf(book);
   removeItem.addEventListener('click', removeBook);
-  libraryContent.appendChild(removeItem);
+  return removeItem;
 }
 
 function removeBook() {
   let bookId = this.dataset.bookId;
-  let libraryContainer = document.querySelector('.library-container');
-  let libraryContent = libraryContainer.firstElementChild;
-  let bookDisplay = libraryContent.querySelectorAll(`div[data-book-id="${bookId}"]`);
-  bookDisplay.forEach(cell => {
-    libraryContent.removeChild(cell);
-  });
   myLibrary.books = myLibrary.books.filter(book => {
     return book !== myLibrary.books[bookId];
   });
@@ -138,7 +225,7 @@ function submitForm(e) {
     addField('nbtitle', 'title', 'value', true),
     addField('nbauthor', 'author', 'value', true),
     addField('nbpages', 'pageCount', 'value', true),
-    addField('nbread', 'read', 'checked', false),
+    addField('nbread', 'read', 'checked', false)
   ];
   let bookParams = {};
   let hasMissingMandatoryValues = false;
@@ -166,11 +253,10 @@ function submitForm(e) {
   togglePopup(this);
 }
 
+function addElementObject(text, key) {
+  return {text, key};
+}
+
 function addField(id, key, valueType, isMandatory) {
-  return {
-    id: id,
-    key: key,
-    valueType: valueType,
-    isMandatory: isMandatory
-  };
+  return {id, key, valueType, isMandatory};
 }

@@ -21,6 +21,7 @@
 body {
   width: 100vw;
   height: 100%;
+  max-width:100%;
   padding: 0;
   margin: 0;
   background-color: var(--main-bg-color);
@@ -28,10 +29,7 @@ body {
   font-family: var(--main-font);
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-}
+/* --- buttons --- */
 
 button {
   padding: 10px;
@@ -55,6 +53,16 @@ button {
 
 button:hover {
   cursor: pointer;
+}
+
+/* --- containers & headers --- */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 20px;
 }
 
 .header-container {
@@ -84,14 +92,15 @@ header >* {
   justify-content: end;
 }
 
-/* --- library table --- */
-
 .library-container {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-bottom: 20px;
 }
+
+/* --- library table --- */
 
 .table {
   flex: 1;
@@ -126,6 +135,31 @@ header >* {
 .remove:hover {
   color: red;
   cursor: pointer;
+}
+
+/* --- library grid --- */
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 0 20px 20px 20px;
+}
+
+.card {
+  flex: 0 1 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-auto-rows: auto;
+  border: 1px solid var(--main-accent-color);
+  background-color: white;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.card div {
+  padding: 6px;
 }
 
 /* --- add new book --- */

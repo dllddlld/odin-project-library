@@ -1,6 +1,6 @@
 function Library() {
   this.books = [];
-  this.booksAdded = 0;
+  this.displayType = 'cards';
 }
 
 function Book(library, params) {
@@ -13,6 +13,5 @@ function Book(library, params) {
 }
 
 Book.prototype.addToLibrary = function() {
-  this.library.booksAdded++;
   this.library.books.push(this);
 };
