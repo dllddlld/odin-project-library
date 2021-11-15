@@ -184,10 +184,14 @@ function removeBook() {
 }
 
 function toggleRead() {
-  let bookId = this.parentElement.dataset.bookId;
+  let bookId;
+  if (myLibrary.displayType === 'table') {
+    bookId = this.parentElement.dataset.bookId;
+  } else {
+    bookId = this.parentElement.parentElement.dataset.bookId;
+  }
   for (let i = 0; i < myLibrary.books.length; i++) {
-    let book = myLibrary.books[i];
-    if (book.id.toString() !== bookId) continue;
+    let book = myLibrary.books[bookId];
     book.read = this.checked;
   }
 }
