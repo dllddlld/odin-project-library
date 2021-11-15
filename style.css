@@ -54,7 +54,7 @@ button:hover {
 
 /* --- library table --- */
 
-.table-container {
+.library-container {
   flex: 1;
   display: flex;
   align-items: center;
