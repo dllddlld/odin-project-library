@@ -41,20 +41,11 @@ function toggleDisplayType() {
 
   disableSelectedDisplayOption();
   updateLibraryDisplay();
-  transitionTableDisplay();
 }
 
 function disableSelectedDisplayOption() {
   displayAsTable.disabled = myLibrary.displayType === 'table';
   displayAsCards.disabled = myLibrary.displayType === 'cards';
-}
-
-function transitionTableDisplay() {
-  if (myLibrary.displayType !== 'table') return;
-  let table = document.querySelector('.table');
-  setTimeout(function() {
-    table.classList.remove('hidden');
-  });
 }
 
 function addSampleBooks() {
