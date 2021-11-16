@@ -1,7 +1,7 @@
 let myLibrary = new Library();
 let form = document.querySelector('form');
-let displayAsTable = document.querySelector('#display-table');
-let displayAsCards = document.querySelector('#display-cards');
+let displayAsTable = document.getElementById('display-table');
+let displayAsCards = document.getElementById('display-cards');
 
 initializePage();
 
@@ -21,7 +21,7 @@ function addPageListeners() {
   displayAsTable.addEventListener('click', toggleDisplayType);
   displayAsCards.addEventListener('click', toggleDisplayType);
 
-  let newBookButton = document.querySelector('#add-nb');
+  let newBookButton = document.getElementById('add-nb');
   let submitBookButton = form.querySelector('#nbsubmit');
   let cancelBookButton = form.querySelector('#nbcancel');
   newBookButton.addEventListener('click', togglePopup);
@@ -254,7 +254,7 @@ function submitForm(e) {
   let bookParams = {};
   let hasMissingMandatoryValues = false;
   fields.forEach(field => {
-    let element = document.querySelector('#' + field.id);
+    let element = document.getElementById(field.id);
     let labelElement = document.querySelector(`label[for="${field.id}"]`);
     let inputValue = element[field.valueType];
     if (field.valueType === 'value') {
