@@ -7,13 +7,18 @@ initializePage();
 
 function initializePage() {
   let libraryContainer = document.querySelector('.library-container');
+  getLocalStorage();
   addPageListeners();
   if (myLibrary.displayType === 'table') {
     createTable(libraryContainer);
   } else {
     createCards(libraryContainer);
   }
-  addSampleBooks();
+  if (myLibrary.books.length === 0) {
+    addSampleBooks();
+  } else {
+    updateLibraryDisplay();
+  }
 }
 
 function addPageListeners() {
@@ -30,6 +35,18 @@ function addPageListeners() {
   form.addEventListener('submit', function (e) {
     e.preventDefault();
   });
+}
+
+function getLocalStorage() {
+  try {
+    let localLibraryContent = localStorage.getItem('library');
+    if (!localLibraryContent) return;
+    let localLibrary = JSON.parse(localLibraryContent);
+    myLibrary.displayType = localLibrary.displayType;
+    myLibrary.books = localLibrary.books.map(bookParams => new Book(bookParams));
+  } catch (e) {
+    console.warn('Failed to get local storage', e);
+  }
 }
 
 function toggleDisplayType() {
@@ -54,7 +71,7 @@ function addSampleBooks() {
     { title: 'The Art of War', author: 'Sun Tzu', pageCount: '112', read: false },
     { title: '101 Essays That Will Change The Way You Think', author: 'Brianna Wiest', pageCount: '448', read: false },
     { title: 'Atomic Habits', author: 'James Clear', pageCount: '320', read: false },
-    { title: 'Bad Blood', author: 'John Carreyrou', pageCount: '320', read: true },
+    { title: 'Bad Blood', author: 'John Carreyrou', pageCount: '320', read: true }
   ];
   samples.forEach(sample => {
     let book = new Book(sample);
@@ -80,6 +97,11 @@ function updateLibraryDisplay() {
     libraryContent = createCards(libraryContainer);
     addCardsContent(libraryContent);
   }
+  saveToLocalStorage();
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem('library', JSON.stringify(myLibrary));
 }
 
 function createTable(libraryContainer) {
