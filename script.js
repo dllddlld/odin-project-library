@@ -41,11 +41,20 @@ function toggleDisplayType() {
 
   disableSelectedDisplayOption();
   updateLibraryDisplay();
+  transitionTableDisplay();
 }
 
 function disableSelectedDisplayOption() {
   displayAsTable.disabled = myLibrary.displayType === 'table';
   displayAsCards.disabled = myLibrary.displayType === 'cards';
+}
+
+function transitionTableDisplay() {
+  if (myLibrary.displayType !== 'table') return;
+  let table = document.querySelector('.table');
+  setTimeout(function() {
+    table.classList.remove('hidden');
+  });
 }
 
 function addSampleBooks() {
@@ -57,9 +66,14 @@ function addSampleBooks() {
     { title: 'Bad Blood', author: 'John Carreyrou', pageCount: '320', read: true },
   ];
   samples.forEach(sample => {
-    let book = new Book(myLibrary, sample);
+    let book = new Book(sample);
+    addToLibrary(book);
   });
   updateLibraryDisplay();
+}
+
+function addToLibrary(book) {
+  myLibrary.books.push(book);
 }
 
 function updateLibraryDisplay() {
@@ -88,6 +102,9 @@ function createTable(libraryContainer) {
     table.appendChild(headerItem);
   });
   libraryContainer.appendChild(table);
+  setTimeout(function() {
+    table.classList.add('active');
+  });
   return table;
 }
 
@@ -150,6 +167,9 @@ function addCardsContent(libraryContent) {
     let removeItem = createRemoveButton(book);
     card.appendChild(removeItem);
     card.dataset.bookId = myLibrary.books.indexOf(book);
+    setTimeout(() => {
+      card.classList.add('active');
+    });
     libraryContent.appendChild(card);
   });
 }
@@ -201,7 +221,7 @@ function togglePopup() {
   let modalPopup = modalContainer.querySelector('.modal-popup');
   if (this.id === 'add-nb') {
     modalContainer.style.display = 'flex';
-    setTimeout(function () {
+    setTimeout(() => {
       modalPopup.classList.add('open');
     });
   } else {
@@ -214,10 +234,10 @@ function togglePopup() {
     invalidFields.forEach(field => {
       field.classList.remove('invalid');
     });
-    setTimeout(function () { //transition doesn't work without setTimeout
+    setTimeout(() => { //transition doesn't work without setTimeout
       modalPopup.classList.remove('open');
     });
-    setTimeout(function () {
+    setTimeout(() => {
       modalContainer.style.display = 'none';
     }, 600);
   }
@@ -252,7 +272,8 @@ function submitForm(e) {
     bookParams[field.key] = inputValue;
   });
   if (hasMissingMandatoryValues) return;
-  let book = new Book(myLibrary, bookParams);
+  let book = new Book(bookParams);
+  addToLibrary(book);
   updateLibraryDisplay();
   togglePopup(this);
 }
