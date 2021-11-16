@@ -227,6 +227,7 @@ function toggleRead() {
     let book = myLibrary.books[bookId];
     book.read = this.checked;
   }
+  saveToLocalStorage();
 }
 
 function togglePopup() {
